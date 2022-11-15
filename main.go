@@ -9,7 +9,14 @@ import (
 )
 
 func main() {
-	fmt.Println("Hello World")
+	driverDB, err := ReadEnvSupabase()
+	if err != nil {
+		panic(err.Error())
+	}
+	_, err = MakeConnection(driverDB)
+	if err != nil {
+		panic(err.Error())
+	}
 }
 
 type DriverSupabase struct {
