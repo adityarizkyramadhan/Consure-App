@@ -9,6 +9,10 @@ import (
 )
 
 func main() {
+	err := godotenv.Load()
+	if err != nil {
+		panic(err.Error())
+	}
 	driverDB, err := ReadEnvSupabase()
 	if err != nil {
 		panic(err.Error())
