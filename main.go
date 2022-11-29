@@ -9,18 +9,7 @@ import (
 )
 
 func main() {
-	err := godotenv.Load()
-	if err != nil {
-		panic(err.Error())
-	}
-	driverDB, err := ReadEnvSupabase()
-	if err != nil {
-		panic(err.Error())
-	}
-	_, err = MakeConnection(driverDB)
-	if err != nil {
-		panic(err.Error())
-	}
+
 }
 
 type DriverSupabase struct {
