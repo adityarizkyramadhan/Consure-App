@@ -1,23 +1,26 @@
 package response
 
 type Response struct {
-	Success bool        `json:"success"`
-	Message string      `json:"message"`
-	Body    interface{} `json:"body"`
+	Success    bool        `json:"success"`
+	Message    string      `json:"message"`
+	Body       interface{} `json:"body"`
+	StatusCode int         `json:"status_code"`
 }
 
-func ResponseWhenFail(message string, body interface{}) Response {
+func ResponseWhenFail(statusCode int, message string) Response {
 	return Response{
-		Success: false,
-		Message: message,
-		Body:    body,
+		StatusCode: statusCode,
+		Success:    false,
+		Message:    message,
+		Body:       nil,
 	}
 }
 
-func ResponseWhenSuccess(message string, body interface{}) Response {
+func ResponseWhenSuccess(statusCode int, message string, body interface{}) Response {
 	return Response{
-		Success: true,
-		Message: message,
-		Body:    body,
+		StatusCode: statusCode,
+		Success:    true,
+		Message:    message,
+		Body:       body,
 	}
 }

@@ -11,7 +11,7 @@ import (
 	"github.com/golang-jwt/jwt/v4"
 )
 
-func GenerateJWToken(id uint) (string, error) {
+func GenerateJWToken(id int) (string, error) {
 	env := os.Getenv("TOKEN_KEY")
 	if env == "" {
 		return "", fmt.Errorf("error when get env")
@@ -30,21 +30,21 @@ func ValidateJWToken() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		bearerToken := c.Request.Header.Get("Authorization")
 		if bearerToken == "" {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, response.ResponseWhenFail("Unauthorized", nil))
+			c.AbortWithStatusJSON(http.StatusUnauthorized, response.ResponseWhenFail(http.StatusUnauthorized, "Token is not provided"))
 			return
 		}
 		bearerToken = strings.ReplaceAll(bearerToken, "Bearer ", "")
 		token, err := jwt.Parse(bearerToken, ekstractToken)
 		if err != nil {
-			c.AbortWithStatusJSON(http.StatusForbidden, response.ResponseWhenFail("Failed to extract token", err.Error()))
+			c.AbortWithStatusJSON(http.StatusForbidden, response.ResponseWhenFail(http.StatusUnauthorized, err.Error()))
 			return
 		}
 		if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-			userId := uint(claims["id"].(float64))
+			userId := uint(claims["id"].(int))
 			c.Set("id", userId)
 			c.Next()
 		} else {
-			c.AbortWithStatusJSON(http.StatusForbidden, response.ResponseWhenFail("Failed to extract token", err.Error()))
+			c.AbortWithStatusJSON(http.StatusForbidden, response.ResponseWhenFail(http.StatusUnauthorized, err.Error()))
 			return
 		}
 	}

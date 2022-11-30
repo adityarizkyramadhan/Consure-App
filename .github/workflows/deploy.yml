@@ -1,0 +1,35 @@
+
+name: Deploy Almetswap Backend
+on:
+  push:
+    branches: [master]
+jobs:
+  web-deploy:
+    if: "contains(github.event.head_commit.message, 'DEPLOY')"
+    name: 🎉 Deploy Almetswap Backend
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🚚 Get latest code
+        uses: actions/checkout@v2
+
+      - name: 📁 Send files via SFTP
+        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
+        with:
+            username: ${{ secrets.SSH_USERNAME }}
+            server: ${{ secrets.SSH_HOST }}
+            password: ${{ secrets.PASSWORD }}
+            local_path: './*'
+            remote_path: '/home/aditya/almetswap-server'
+
+      - name: 🌟 Run server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            pm2 delete sl
+            cd "/home/aditya/almetswap-server"
+            go build .
+            pm2 start ./almetswap --name almetswap
