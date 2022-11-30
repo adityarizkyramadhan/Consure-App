@@ -1,12 +1,12 @@
 
-name: Deploy Almetswap Backend
+name: Deploy Consure App Backend
 on:
   push:
     branches: [master]
 jobs:
   web-deploy:
     if: "contains(github.event.head_commit.message, 'DEPLOY')"
-    name: 🎉 Deploy Almetswap Backend
+    name: 🎉 Deploy Consure App Backend
     runs-on: ubuntu-latest
 
     steps:
@@ -20,7 +20,7 @@ jobs:
             server: ${{ secrets.SSH_HOST }}
             password: ${{ secrets.PASSWORD }}
             local_path: './*'
-            remote_path: '/home/aditya/almetswap-server'
+            remote_path: '/home/aditya/Consure-App'
 
       - name: 🌟 Run server
         uses: appleboy/ssh-action@master
@@ -29,7 +29,7 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            pm2 delete sl
-            cd "/home/aditya/almetswap-server"
+            pm2 delete consapp
+            cd "/home/aditya/Consure-App"
             go build .
-            pm2 start ./almetswap --name almetswap
+            pm2 start "./Consure-App" --name consapp
