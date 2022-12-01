@@ -29,7 +29,7 @@ func main() {
 		panic(err.Error())
 	}
 	router.GET("/ping", func(ctx *gin.Context) {
-		ctx.JSON(200, "pong-pong")
+		ctx.JSON(200, "pong cd ke tiga")
 	})
 	//User
 	repoGeneral := generalRepo.NewGeneralRepositoryImpl(db)
