@@ -5,9 +5,11 @@ import (
 	"Consure-App/middleware"
 	"Consure-App/repository/general"
 	repouser "Consure-App/repository/user"
+	"Consure-App/sdk/upload"
 	usecaseuser "Consure-App/usecase/user"
 	"fmt"
 	"log"
+	"mime/multipart"
 
 	hash "github.com/adityarizkyramadhan/sdk-golang/hash"
 )
@@ -64,4 +66,16 @@ func (uc *UserUsecaseImpl) SignUp(username, password, email string) (string, err
 		return "", err
 	}
 	return token, nil
+}
+
+func (uc *UserUsecaseImpl) UpdateProfile(id int, avatar *multipart.FileHeader) (string, error) {
+	link, err := upload.UploadImage(avatar)
+	if err != nil {
+		return "", err
+	}
+	err = uc.RepoUser.UpdateProfile(id, link)
+	if err != nil {
+		return "", err
+	}
+	return link, nil
 }

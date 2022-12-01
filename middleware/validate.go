@@ -40,8 +40,8 @@ func ValidateJWToken() gin.HandlerFunc {
 			return
 		}
 		if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-			userId := uint(claims["id"].(int))
-			c.Set("id", userId)
+			userId := int(claims["id"].(float64))
+			c.Set("login", userId)
 			c.Next()
 		} else {
 			c.AbortWithStatusJSON(http.StatusForbidden, response.ResponseWhenFail(http.StatusUnauthorized, err.Error()))

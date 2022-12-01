@@ -1,8 +1,11 @@
 package user
 
 import (
+	"Consure-App/middleware"
+	"Consure-App/sdk/auth"
 	"Consure-App/sdk/response"
 	userUc "Consure-App/usecase/user"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -18,6 +21,7 @@ func NewUserController(userUc userUc.UserUsecase, r *gin.RouterGroup) {
 	}
 	r.POST("signin", userCtrl.SignIn)
 	r.POST("signup", userCtrl.SignUp)
+	r.PUT("profile", middleware.ValidateJWToken(), userCtrl.UpdateFotoProfile)
 }
 
 type signInInput struct {
@@ -58,7 +62,25 @@ func (ctrl *UserController) SignUp(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, response.ResponseWhenFail(http.StatusBadRequest, err.Error()))
 		return
 	}
-	ctx.JSON(http.StatusOK, response.ResponseWhenSuccess(http.StatusOK, "success", gin.H{
+	ctx.JSON(http.StatusOK, response.ResponseWhenSuccess(http.StatusCreated, "success", gin.H{
 		"token": token,
+	}))
+}
+
+func (ctrl *UserController) UpdateFotoProfile(ctx *gin.Context) {
+	avatar, err := ctx.FormFile("avatar")
+	id := auth.GetIDFromBearer(ctx)
+	log.Println("data => ", id)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, response.ResponseWhenFail(http.StatusBadRequest, err.Error()))
+		return
+	}
+	link, err := ctrl.UserUc.UpdateProfile(id, avatar)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, response.ResponseWhenFail(http.StatusBadRequest, err.Error()))
+		return
+	}
+	ctx.JSON(http.StatusOK, response.ResponseWhenSuccess(http.StatusOK, "success", gin.H{
+		"link": link,
 	}))
 }
