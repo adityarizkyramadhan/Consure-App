@@ -29,7 +29,7 @@ func main() {
 		panic(err.Error())
 	}
 	router.GET("/ping", func(ctx *gin.Context) {
-		ctx.JSON(200, "pong")
+		ctx.JSON(200, "pong-pong")
 	})
 	//User
 	repoGeneral := generalRepo.NewGeneralRepositoryImpl(db)
@@ -37,7 +37,9 @@ func main() {
 	ucUser := userUc.NewUserUsecaseImpl(repoUser, repoGeneral)
 	user := router.Group("user")
 	userCtrl.NewUserController(ucUser, user)
-	router.Run(fmt.Sprintf(":%s", os.Getenv("PORT")))
+	if err := router.Run(fmt.Sprintf(":%s", os.Getenv("PORT"))); err != nil {
+		panic(err.Error())
+	}
 }
 
 type DriverSupabase struct {
