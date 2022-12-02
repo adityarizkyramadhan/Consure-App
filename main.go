@@ -2,6 +2,7 @@ package main
 
 import (
 	expertCtrl "Consure-App/controller/expert"
+	reviewCtrl "Consure-App/controller/review"
 	userCtrl "Consure-App/controller/user"
 	"Consure-App/domain"
 	generalRepo "Consure-App/repository/general/general_impl"
@@ -10,6 +11,9 @@ import (
 	expertRepo "Consure-App/repository/expert/expert_impl"
 	expertUc "Consure-App/usecase/expert/expert_impl"
 	userUc "Consure-App/usecase/user/user_impl"
+
+	reviewRepo "Consure-App/repository/review/review_impl"
+	reviewUc "Consure-App/usecase/review/review_impl"
 	"fmt"
 	"os"
 
@@ -36,8 +40,9 @@ func main() {
 		ctx.JSON(200, "pong cd ke tiga")
 	})
 
-	//User
 	repoGeneral := generalRepo.NewGeneralRepositoryImpl(db)
+
+	//User
 	repoUser := userRepo.NewUserRepositoryImpl(db)
 	ucUser := userUc.NewUserUsecaseImpl(repoUser, repoGeneral)
 	user := router.Group("user")
@@ -48,6 +53,12 @@ func main() {
 	ucExpert := expertUc.NewExpertUsecase(repoGeneral, repoExpert)
 	expert := router.Group("expert")
 	expertCtrl.NewExpertController(ucExpert, expert)
+
+	//Review
+	repoReview := reviewRepo.NewReviewRepository(db)
+	ucReview := reviewUc.NewReviewUsecase(repoGeneral, repoReview)
+	review := router.Group("review")
+	reviewCtrl.NewController(ucReview, review)
 
 	if err := router.Run(fmt.Sprintf(":%s", os.Getenv("PORT"))); err != nil {
 		panic(err.Error())

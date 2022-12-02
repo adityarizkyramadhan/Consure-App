@@ -1,3 +1,8 @@
 package review
 
-type ReviewRepository interface{}
+import "Consure-App/domain"
+
+type ReviewRepository interface {
+	FindByIdExpert(int, *[]*domain.Review) error
+	FindByIdUser(int, *[]*domain.Review) error
+}
