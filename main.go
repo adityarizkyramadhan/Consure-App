@@ -1,10 +1,14 @@
 package main
 
 import (
+	expertCtrl "Consure-App/controller/expert"
 	userCtrl "Consure-App/controller/user"
 	"Consure-App/domain"
 	generalRepo "Consure-App/repository/general/general_impl"
 	userRepo "Consure-App/repository/user/user_impl"
+
+	expertRepo "Consure-App/repository/expert/expert_impl"
+	expertUc "Consure-App/usecase/expert/expert_impl"
 	userUc "Consure-App/usecase/user/user_impl"
 	"fmt"
 	"os"
@@ -31,15 +35,24 @@ func main() {
 	router.GET("/ping", func(ctx *gin.Context) {
 		ctx.JSON(200, "pong cd ke tiga")
 	})
+
 	//User
 	repoGeneral := generalRepo.NewGeneralRepositoryImpl(db)
 	repoUser := userRepo.NewUserRepositoryImpl(db)
 	ucUser := userUc.NewUserUsecaseImpl(repoUser, repoGeneral)
 	user := router.Group("user")
 	userCtrl.NewUserController(ucUser, user)
+
+	//Expert
+	repoExpert := expertRepo.NewExpertRepository(db)
+	ucExpert := expertUc.NewExpertUsecase(repoGeneral, repoExpert)
+	expert := router.Group("expert")
+	expertCtrl.NewExpertController(ucExpert, expert)
+
 	if err := router.Run(fmt.Sprintf(":%s", os.Getenv("PORT"))); err != nil {
 		panic(err.Error())
 	}
+
 }
 
 type DriverSupabase struct {

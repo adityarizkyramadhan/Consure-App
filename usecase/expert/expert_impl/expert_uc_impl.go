@@ -31,8 +31,17 @@ func (ec *ExpertUseCase) SignUp(input *expertUc.InputExpert) error {
 		Price:      input.Price,
 		Experience: input.Experience,
 		Education:  input.Education,
+		Tag:        input.Tag,
 		LinkImage:  link,
 	}
 	err = ec.RepoGeneral.Create(data)
 	return err
+}
+
+func (ec *ExpertUseCase) FindAll(data *[]*domain.Expert) error {
+	return ec.RepoGeneral.FindAll(&data)
+}
+
+func (ec *ExpertUseCase) FindById(id int, data interface{}) error {
+	return ec.RepoGeneral.FindById(id, data)
 }

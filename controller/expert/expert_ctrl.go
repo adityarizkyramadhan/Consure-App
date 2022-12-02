@@ -1,9 +1,11 @@
 package expert
 
 import (
+	"Consure-App/domain"
 	"Consure-App/sdk/response"
 	"Consure-App/usecase/expert"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -17,6 +19,8 @@ func NewExpertController(exUc expert.ExpertUsecase, r *gin.RouterGroup) {
 		ExUc: exUc,
 	}
 	r.POST("", exCtrl.SignUp)
+	r.GET("all", exCtrl.FindAll)
+	r.GET("single/:id", exCtrl.FindById)
 }
 
 func (exCtrl *ExpertController) SignUp(ctx *gin.Context) {
@@ -30,4 +34,23 @@ func (exCtrl *ExpertController) SignUp(ctx *gin.Context) {
 		return
 	}
 	ctx.JSON(http.StatusCreated, response.ResponseWhenSuccess(http.StatusCreated, "Success", nil))
+}
+
+func (exCtrl *ExpertController) FindAll(ctx *gin.Context) {
+	data := []*domain.Expert{}
+	if err := exCtrl.ExUc.FindAll(&data); err != nil {
+		ctx.JSON(http.StatusInternalServerError, response.ResponseWhenFail(http.StatusInternalServerError, err.Error()))
+		return
+	}
+	ctx.JSON(http.StatusOK, response.ResponseWhenSuccess(http.StatusOK, "Success", data))
+}
+
+func (exCtrl *ExpertController) FindById(ctx *gin.Context) {
+	id, _ := strconv.Atoi(ctx.Param("id"))
+	data := new(domain.Expert)
+	if err := exCtrl.ExUc.FindById(id, data); err != nil {
+		ctx.JSON(http.StatusInternalServerError, response.ResponseWhenFail(http.StatusInternalServerError, err.Error()))
+		return
+	}
+	ctx.JSON(http.StatusOK, response.ResponseWhenSuccess(http.StatusOK, "Success", data))
 }
