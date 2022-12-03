@@ -8,7 +8,6 @@ import (
 	"Consure-App/sdk/upload"
 	usecaseuser "Consure-App/usecase/user"
 	"fmt"
-	"log"
 	"mime/multipart"
 
 	hash "github.com/adityarizkyramadhan/sdk-golang/hash"
@@ -49,6 +48,7 @@ func (uc *UserUsecaseImpl) SignIn(username, password string) (string, error) {
 func (uc *UserUsecaseImpl) SignUp(username, password, email string) (string, error) {
 	hashing := hash.NewPasswordSha512()
 	passwordHash, err := hashing.GeneratePasswordSha512(password)
+	fmt.Println(passwordHash)
 	if err != nil {
 		return "", err
 	}
@@ -61,7 +61,6 @@ func (uc *UserUsecaseImpl) SignUp(username, password, email string) (string, err
 		return "", nil
 	}
 	token, err := middleware.GenerateJWToken(int(user.ID))
-	log.Println(user)
 	if err != nil {
 		return "", err
 	}

@@ -13,5 +13,5 @@ type ReviewUsecase interface {
 type InputReview struct {
 	Star     int    `json:"star" binding:"required"`
 	Komentar string `json:"komentar" binding:"required"`
-	IdExpert int    `uri:"id_expert" binding:"required"`
+	IdExpert int
 }

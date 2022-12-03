@@ -4,6 +4,7 @@ import (
 	"Consure-App/domain"
 	"Consure-App/sdk/response"
 	"Consure-App/usecase/expert"
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -21,6 +22,7 @@ func NewExpertController(exUc expert.ExpertUsecase, r *gin.RouterGroup) {
 	r.POST("", exCtrl.SignUp)
 	r.GET("all", exCtrl.FindAll)
 	r.GET("single/:id", exCtrl.FindById)
+	r.GET("search", exCtrl.FindByTag)
 }
 
 func (exCtrl *ExpertController) SignUp(ctx *gin.Context) {
@@ -52,5 +54,17 @@ func (exCtrl *ExpertController) FindById(ctx *gin.Context) {
 		ctx.JSON(http.StatusInternalServerError, response.ResponseWhenFail(http.StatusInternalServerError, err.Error()))
 		return
 	}
+	ctx.JSON(http.StatusOK, response.ResponseWhenSuccess(http.StatusOK, "Success", data))
+}
+
+func (exCtrl *ExpertController) FindByTag(ctx *gin.Context) {
+	tag := ctx.Query("tag")
+	fmt.Println(tag)
+	data := []*domain.Expert{}
+	if err := exCtrl.ExUc.FindByTag(tag, &data); err != nil {
+		ctx.JSON(http.StatusInternalServerError, response.ResponseWhenFail(http.StatusInternalServerError, err.Error()))
+		return
+	}
+	fmt.Println(data)
 	ctx.JSON(http.StatusOK, response.ResponseWhenSuccess(http.StatusOK, "Success", data))
 }

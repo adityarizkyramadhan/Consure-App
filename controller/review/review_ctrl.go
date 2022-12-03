@@ -23,7 +23,7 @@ func NewController(revUc review.ReviewUsecase, r *gin.RouterGroup) {
 	r.GET("all", ctrl.GetAll)
 	r.GET("expert/:id", ctrl.GetByIdExpert)
 	r.GET("user", middleware.ValidateJWToken(), ctrl.GetByIdUSer)
-	r.POST("expert/:id", middleware.ValidateJWToken(), ctrl.CreateReview)
+	r.POST("expert/:id_expert", middleware.ValidateJWToken(), ctrl.CreateReview)
 }
 
 func (ctrl *ReviewController) GetAll(ctx *gin.Context) {
@@ -36,7 +36,11 @@ func (ctrl *ReviewController) GetAll(ctx *gin.Context) {
 }
 
 func (ctrl *ReviewController) GetByIdExpert(ctx *gin.Context) {
-	id, _ := strconv.Atoi(ctx.Param("id"))
+	id, err := strconv.Atoi(ctx.Param("id"))
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, response.ResponseWhenFail(http.StatusBadRequest, err.Error()))
+		return
+	}
 	data := []*domain.Review{}
 	if err := ctrl.RevUc.FindByIdExpert(id, &data); err != nil {
 		ctx.JSON(http.StatusInternalServerError, response.ResponseWhenFail(http.StatusInternalServerError, err.Error()))
@@ -57,14 +61,20 @@ func (ctrl *ReviewController) GetByIdUSer(ctx *gin.Context) {
 
 func (ctrl *ReviewController) CreateReview(ctx *gin.Context) {
 	id := auth.GetIDFromBearer(ctx)
+	idExpert, err := strconv.Atoi(ctx.Param("id_expert"))
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, response.ResponseWhenFail(http.StatusBadRequest, err.Error()))
+		return
+	}
 	input := new(review.InputReview)
 	if err := ctx.ShouldBind(input); err != nil {
 		ctx.JSON(http.StatusBadRequest, response.ResponseWhenFail(http.StatusBadRequest, err.Error()))
 		return
 	}
+	input.IdExpert = idExpert
 	if err := ctrl.RevUc.Create(id, input); err != nil {
 		ctx.JSON(http.StatusBadRequest, response.ResponseWhenFail(http.StatusBadRequest, err.Error()))
 		return
 	}
-	ctx.JSON(http.StatusOK, response.ResponseWhenSuccess(http.StatusOK, "success", nil))
+	ctx.JSON(http.StatusCreated, response.ResponseWhenSuccess(http.StatusCreated, "success", nil))
 }

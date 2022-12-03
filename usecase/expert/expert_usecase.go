@@ -9,6 +9,7 @@ type ExpertUsecase interface {
 	SignUp(*InputExpert) error
 	FindAll(*[]*domain.Expert) error
 	FindById(int, interface{}) error
+	FindByTag(string, *[]*domain.Expert) error
 }
 
 type InputExpert struct {

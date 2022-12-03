@@ -90,8 +90,26 @@ func MakeConnection(data DriverSupabase) (*gorm.DB, error) {
 	if err != nil {
 		return nil, err
 	}
-	if err := db.AutoMigrate(new(domain.User), new(domain.Expert), new(domain.Review)); err != nil {
+	if err := db.AutoMigrate(new(domain.User), new(domain.Expert), new(domain.Review), new(domain.Transaction)); err != nil {
 		return nil, err
 	}
 	return db, nil
 }
+
+// func main() {
+// 	//2022-10-25 15:00:00.000
+// 	dateString := "2022-10-25 15:00:00.000"
+// 	date, error := time.Parse("2006-01-02 15:04:05.000", dateString)
+
+// 	if error != nil {
+// 		fmt.Println(error)
+// 		return
+// 	}
+
+// 	fmt.Printf("Type of dateString: %T\n", dateString)
+// 	fmt.Printf("Type of date: %d\n", date.Day())
+// 	fmt.Println()
+// 	fmt.Println(date.Hour())
+// 	fmt.Printf("Value of dateString: %v\n", dateString)
+// 	fmt.Printf("Value of date: %v", date)
+// }

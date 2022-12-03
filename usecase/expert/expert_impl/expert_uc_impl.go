@@ -45,3 +45,7 @@ func (ec *ExpertUseCase) FindAll(data *[]*domain.Expert) error {
 func (ec *ExpertUseCase) FindById(id int, data interface{}) error {
 	return ec.RepoGeneral.FindById(id, data)
 }
+
+func (ec *ExpertUseCase) FindByTag(tag string, data *[]*domain.Expert) error {
+	return ec.RepoExpert.FindByTag(tag, data)
+}
