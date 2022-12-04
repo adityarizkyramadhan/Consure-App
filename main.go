@@ -3,6 +3,7 @@ package main
 import (
 	expertCtrl "Consure-App/controller/expert"
 	reviewCtrl "Consure-App/controller/review"
+	trxCtrl "Consure-App/controller/transaction"
 	userCtrl "Consure-App/controller/user"
 	"Consure-App/domain"
 	generalRepo "Consure-App/repository/general/general_impl"
@@ -11,6 +12,9 @@ import (
 	expertRepo "Consure-App/repository/expert/expert_impl"
 	expertUc "Consure-App/usecase/expert/expert_impl"
 	userUc "Consure-App/usecase/user/user_impl"
+
+	transactionRepo "Consure-App/repository/transaction/transaction_impl"
+	transactionUc "Consure-App/usecase/transaction/transaction_impl"
 
 	reviewRepo "Consure-App/repository/review/review_impl"
 	reviewUc "Consure-App/usecase/review/review_impl"
@@ -28,7 +32,7 @@ func main() {
 	if err := godotenv.Load(); err != nil {
 		panic(err.Error())
 	}
-	driverDb, err := ReadEnvSupabase()
+	driverDb, err := ReadEnvDatabase()
 	if err != nil {
 		panic(err.Error())
 	}
@@ -60,10 +64,15 @@ func main() {
 	review := router.Group("review")
 	reviewCtrl.NewController(ucReview, review)
 
+	//Transaksi
+	repoTrc := transactionRepo.NewTransactionRepository(db)
+	ucTrc := transactionUc.NewTransactionUsecase(repoGeneral, repoTrc)
+	transaction := router.Group("transaction")
+	trxCtrl.NewTransactionController(ucTrc, transaction)
+
 	if err := router.Run(fmt.Sprintf(":%s", os.Getenv("PORT"))); err != nil {
 		panic(err.Error())
 	}
-
 }
 
 type DriverSupabase struct {
@@ -74,7 +83,7 @@ type DriverSupabase struct {
 	DbName   string
 }
 
-func ReadEnvSupabase() (DriverSupabase, error) {
+func ReadEnvDatabase() (DriverSupabase, error) {
 	return DriverSupabase{
 		User:     os.Getenv("DB_USER"),
 		Password: os.Getenv("DB_PASSWORD"),

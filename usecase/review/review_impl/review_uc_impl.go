@@ -35,8 +35,14 @@ func (ec *ReviewUseCase) FindByIdExpert(id int, data *dto.DataExpertWithReview) 
 		return err
 	}
 
-	data.Reviews = review
+	expert := new(domain.Expert)
 
+	if err := ec.RepoGeneral.FindById(id, expert); err != nil {
+		return err
+	}
+
+	data.Reviews = review
+	data.Expert = expert
 	avg := ec.RepoReview.CountAverage(id)
 
 	data.AverageStar = avg
