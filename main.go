@@ -28,10 +28,11 @@ import (
 )
 
 func main() {
-	router := gin.Default()
 	if err := godotenv.Load(); err != nil {
 		panic(err.Error())
 	}
+	gin.SetMode(os.Getenv("GIN_MODE"))
+	router := gin.Default()
 	driverDb, err := ReadEnvDatabase()
 	if err != nil {
 		panic(err.Error())

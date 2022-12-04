@@ -1,3 +1,7 @@
 package transaction
 
-type TransactionRepository interface{}
+import "Consure-App/domain"
+
+type TransactionRepository interface {
+	History(id int, data *[]*domain.Transaction) error
+}

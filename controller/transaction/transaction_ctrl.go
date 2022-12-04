@@ -1,8 +1,12 @@
 package transaction
 
 import (
+	"Consure-App/domain"
 	"Consure-App/middleware"
+	"Consure-App/sdk/auth"
+	"Consure-App/sdk/response"
 	transactionUc "Consure-App/usecase/transaction"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
@@ -16,8 +20,30 @@ func NewTransactionController(trxUc transactionUc.TransactionUsecase, r *gin.Rou
 		TrxUc: trxUc,
 	}
 	r.POST("", middleware.ValidateJWToken(), trxCtrl.Create)
+	r.GET("history", middleware.ValidateJWToken(), trxCtrl.History)
 }
 
 func (ctrl *TransactionController) Create(ctx *gin.Context) {
+	id := auth.GetIDFromBearer(ctx)
+	input := new(transactionUc.InputTransaction)
+	if err := ctx.ShouldBind(input); err != nil {
+		ctx.JSON(http.StatusBadRequest, response.ResponseWhenFail(http.StatusBadRequest, err.Error()))
+		return
+	}
+	if err := ctrl.TrxUc.Create(input, id); err != nil {
+		ctx.JSON(http.StatusInternalServerError, response.ResponseWhenFail(http.StatusInternalServerError, err.Error()))
+		return
+	}
+	ctx.JSON(http.StatusCreated, response.ResponseWhenSuccess(http.StatusCreated, "Success", nil))
+}
+
+func (ctrl *TransactionController) History(ctx *gin.Context) {
+	id := auth.GetIDFromBearer(ctx)
+	data := []*domain.Transaction{}
+	if err := ctrl.TrxUc.History(id, &data); err != nil {
+		ctx.JSON(http.StatusInternalServerError, response.ResponseWhenFail(http.StatusInternalServerError, err.Error()))
+		return
+	}
+	ctx.JSON(http.StatusOK, response.ResponseWhenSuccess(http.StatusCreated, "Success", data))
 
 }
