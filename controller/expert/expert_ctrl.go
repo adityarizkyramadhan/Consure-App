@@ -65,6 +65,5 @@ func (exCtrl *ExpertController) FindByTag(ctx *gin.Context) {
 		ctx.JSON(http.StatusInternalServerError, response.ResponseWhenFail(http.StatusInternalServerError, err.Error()))
 		return
 	}
-	fmt.Println(data)
 	ctx.JSON(http.StatusOK, response.ResponseWhenSuccess(http.StatusOK, "Success", data))
 }

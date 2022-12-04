@@ -2,6 +2,7 @@ package reviewimpl
 
 import (
 	"Consure-App/domain"
+	"Consure-App/dto"
 	"Consure-App/repository/general"
 	repoRev "Consure-App/repository/review"
 	ucRev "Consure-App/usecase/review"
@@ -27,8 +28,20 @@ func (ec *ReviewUseCase) FindById(id int, data interface{}) error {
 	return ec.RepoGeneral.FindById(id, data)
 }
 
-func (ec *ReviewUseCase) FindByIdExpert(id int, data *[]*domain.Review) error {
-	return ec.RepoReview.FindByIdExpert(id, data)
+func (ec *ReviewUseCase) FindByIdExpert(id int, data *dto.DataExpertWithReview) error {
+	var review []*domain.Review
+
+	if err := ec.RepoReview.FindByIdExpert(id, &review); err != nil {
+		return err
+	}
+
+	data.Reviews = review
+
+	avg := ec.RepoReview.CountAverage(id)
+
+	data.AverageStar = avg
+
+	return nil
 }
 func (ec *ReviewUseCase) FindByIdUser(id int, data *[]*domain.Review) error {
 	return ec.RepoReview.FindByIdUser(id, data)

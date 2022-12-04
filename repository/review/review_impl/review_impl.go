@@ -20,6 +20,13 @@ func (repImpl *ReviewRepositoryImpl) FindByIdExpert(id int, data *[]*domain.Revi
 	return repImpl.DB.Where("id_expert = ?", id).Find(data).Error
 }
 
+func (repImpl *ReviewRepositoryImpl) CountAverage(id int) float64 {
+	var result float64
+	row := repImpl.DB.Table("reviews").Select("avg(star)").Row()
+	row.Scan(&result)
+	return result
+}
+
 func (repImpl *ReviewRepositoryImpl) FindByIdUser(id int, data *[]*domain.Review) error {
 	return repImpl.DB.Where("id_user = ?", id).Find(data).Error
 }

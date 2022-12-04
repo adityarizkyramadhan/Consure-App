@@ -1,11 +1,14 @@
 package review
 
-import "Consure-App/domain"
+import (
+	"Consure-App/domain"
+	"Consure-App/dto"
+)
 
 type ReviewUsecase interface {
 	FindAll(data *[]*domain.Review) error
 	FindById(id int, data interface{}) error
-	FindByIdExpert(id int, data *[]*domain.Review) error
+	FindByIdExpert(id int, data *dto.DataExpertWithReview) error
 	FindByIdUser(id int, data *[]*domain.Review) error
 	Create(int, *InputReview) error
 }

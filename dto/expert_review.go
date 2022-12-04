@@ -17,3 +17,8 @@ type Expert struct {
 	LinkImage  string          `json:"link_image"`
 	Reviews    []domain.Review `json:"reviews"`
 }
+
+type DataExpertWithReview struct {
+	AverageStar float64          `json:"average_star"`
+	Reviews     []*domain.Review `json:"reviews"`
+}

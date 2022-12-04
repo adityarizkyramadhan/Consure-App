@@ -2,6 +2,7 @@ package review
 
 import (
 	"Consure-App/domain"
+	"Consure-App/dto"
 	"Consure-App/middleware"
 	"Consure-App/sdk/auth"
 	"Consure-App/sdk/response"
@@ -41,8 +42,8 @@ func (ctrl *ReviewController) GetByIdExpert(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, response.ResponseWhenFail(http.StatusBadRequest, err.Error()))
 		return
 	}
-	data := []*domain.Review{}
-	if err := ctrl.RevUc.FindByIdExpert(id, &data); err != nil {
+	data := new(dto.DataExpertWithReview)
+	if err := ctrl.RevUc.FindByIdExpert(id, data); err != nil {
 		ctx.JSON(http.StatusInternalServerError, response.ResponseWhenFail(http.StatusInternalServerError, err.Error()))
 		return
 	}
@@ -52,7 +53,7 @@ func (ctrl *ReviewController) GetByIdExpert(ctx *gin.Context) {
 func (ctrl *ReviewController) GetByIdUSer(ctx *gin.Context) {
 	id := auth.GetIDFromBearer(ctx)
 	data := []*domain.Review{}
-	if err := ctrl.RevUc.FindByIdExpert(id, &data); err != nil {
+	if err := ctrl.RevUc.FindByIdUser(id, &data); err != nil {
 		ctx.JSON(http.StatusInternalServerError, response.ResponseWhenFail(http.StatusInternalServerError, err.Error()))
 		return
 	}
