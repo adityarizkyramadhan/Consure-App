@@ -3,7 +3,6 @@ package expertimpl
 import (
 	"Consure-App/domain"
 	"Consure-App/repository/expert"
-	"fmt"
 
 	"gorm.io/gorm"
 )
@@ -17,6 +16,5 @@ func NewExpertRepository(db *gorm.DB) expert.ExpertRepository {
 }
 
 func (er *ExpertRepoImpl) FindByTag(tag string, data *[]*domain.Expert) error {
-	tag = fmt.Sprintln("%", tag, "%")
-	return er.DB.Where("tag LIKE ?", tag).Find(data).Error
+	return er.DB.Where("tag = ?", tag).Find(data).Error
 }
