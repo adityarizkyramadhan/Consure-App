@@ -26,11 +26,9 @@ func (ec *ExpertUseCase) SignUp(input *expertUc.InputExpert) error {
 		return err
 	}
 	data := &domain.Expert{
-		Email:      input.Email,
 		Nama:       input.Nama,
 		Price:      input.Price,
 		Experience: input.Experience,
-		Education:  input.Education,
 		Tag:        input.Tag,
 		LinkImage:  link,
 	}
