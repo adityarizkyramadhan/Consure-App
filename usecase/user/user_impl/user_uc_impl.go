@@ -58,7 +58,7 @@ func (uc *UserUsecaseImpl) SignUp(username, password, email string) (string, err
 		Email:    email,
 	}
 	if err := uc.RepoGeneral.Create(user); err != nil {
-		return "", nil
+		return "", err
 	}
 	token, err := middleware.GenerateJWToken(int(user.ID))
 	if err != nil {

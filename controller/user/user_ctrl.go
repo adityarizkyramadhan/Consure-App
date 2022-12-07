@@ -58,7 +58,7 @@ func (ctrl *UserController) SignUp(ctx *gin.Context) {
 		return
 	}
 	token, err := ctrl.UserUc.SignUp(input.Username, input.Password, input.Email)
-	if err != nil {
+	if err != nil || token == "" {
 		ctx.JSON(http.StatusBadRequest, response.ResponseWhenFail(http.StatusBadRequest, err.Error()))
 		return
 	}
