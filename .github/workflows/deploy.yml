@@ -29,7 +29,7 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            pm2 delete consapp
+            pm2 delete Consure-App
             cd "/home/aditya/Consure-App"
             go build .
-            pm2 start "./Consure-App" --name consapp
+            pm2 start "./Consure-App"

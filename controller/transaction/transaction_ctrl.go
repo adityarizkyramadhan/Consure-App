@@ -45,6 +45,6 @@ func (ctrl *TransactionController) History(ctx *gin.Context) {
 		ctx.JSON(http.StatusInternalServerError, response.ResponseWhenFail(http.StatusInternalServerError, err.Error()))
 		return
 	}
-	ctx.JSON(http.StatusOK, response.ResponseWhenSuccess(http.StatusCreated, "Success", data))
+	ctx.JSON(http.StatusOK, response.ResponseWhenSuccess(http.StatusOK, "Success", data))
 
 }
