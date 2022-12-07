@@ -17,8 +17,8 @@ func NewUserRepositoryImpl(db *gorm.DB) user.UserRepository {
 	}
 }
 
-func (ur *UserRepositoryImpl) FindByUsername(username string, data interface{}) error {
-	return ur.DB.Where("username = ?", username).Take(data).Error
+func (ur *UserRepositoryImpl) FindByEmail(email string, data interface{}) error {
+	return ur.DB.Where("email = ?", email).Take(data).Error
 }
 
 func (ur *UserRepositoryImpl) UpdateProfile(id int, link string) error {

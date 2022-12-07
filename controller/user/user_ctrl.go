@@ -25,7 +25,7 @@ func NewUserController(userUc userUc.UserUsecase, r *gin.RouterGroup) {
 }
 
 type signInInput struct {
-	Username string `json:"username" binding:"required"`
+	Email    string `json:"email" binding:"required"`
 	Password string `json:"password" binding:"required"`
 }
 
@@ -35,7 +35,7 @@ func (ctrl *UserController) SignIn(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, response.ResponseWhenFail(http.StatusBadRequest, err.Error()))
 		return
 	}
-	token, err := ctrl.UserUc.SignIn(input.Username, input.Password)
+	token, err := ctrl.UserUc.SignIn(input.Email, input.Password)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, response.ResponseWhenFail(http.StatusBadRequest, err.Error()))
 		return

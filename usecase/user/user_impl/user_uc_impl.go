@@ -27,7 +27,7 @@ func NewUserUsecaseImpl(repoUser repouser.UserRepository, repoGeneral general.Ge
 
 func (uc *UserUsecaseImpl) SignIn(username, password string) (string, error) {
 	user := new(domain.User)
-	if err := uc.RepoUser.FindByUsername(username, &user); err != nil {
+	if err := uc.RepoUser.FindByEmail(username, &user); err != nil {
 		return "", err
 	}
 	hashing := hash.NewPasswordSha512()
