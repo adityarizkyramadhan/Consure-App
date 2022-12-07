@@ -4,7 +4,7 @@ import "Consure-App/domain"
 
 type TransactionUsecase interface {
 	Create(*InputTransaction, int) error
-	History(int, *[]*domain.Transaction) error
+	History(int, string, *[]*domain.Transaction) error
 }
 
 type InputTransaction struct {

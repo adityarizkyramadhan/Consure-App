@@ -17,6 +17,6 @@ func NewTransactionRepository(db *gorm.DB) transaction.TransactionRepository {
 	}
 }
 
-func (repo *TransactionRepositoryImpl) History(id int, data *[]*domain.Transaction) error {
-	return repo.DB.Where("id_user = ?", id).Find(data).Error
+func (repo *TransactionRepositoryImpl) History(id int, status string, data *[]*domain.Transaction) error {
+	return repo.DB.Where("id_user = ?", id).Where("status = ?", status).Find(data).Error
 }

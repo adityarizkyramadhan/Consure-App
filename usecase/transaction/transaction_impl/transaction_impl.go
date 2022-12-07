@@ -37,6 +37,6 @@ func (uc *TransactionUsecase) Create(input *transUc.InputTransaction, idUser int
 	return uc.GeneralRepo.Create(data)
 }
 
-func (uc *TransactionUsecase) History(id int, data *[]*domain.Transaction) error {
-	return uc.TransRepo.History(id, data)
+func (uc *TransactionUsecase) History(id int, status string, data *[]*domain.Transaction) error {
+	return uc.TransRepo.History(id, status, data)
 }
