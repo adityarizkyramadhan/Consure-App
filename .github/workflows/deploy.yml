@@ -18,7 +18,7 @@ jobs:
         with:
             username: ${{ secrets.SSH_USERNAME }}
             server: ${{ secrets.SSH_HOST }}
-            ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
+            password: ${{ secrets.PASSWORD }}
             local_path: './*'
             remote_path: '/home/aditya/Consure-App'
 
