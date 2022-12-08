@@ -23,3 +23,8 @@ type DataExpertWithReview struct {
 	AverageStar float64          `json:"average_star"`
 	Reviews     []*domain.Review `json:"reviews"`
 }
+
+type History struct {
+	Expert       *domain.Expert      `json:"expert"`
+	Transactions *domain.Transaction `json:"transactions"`
+}

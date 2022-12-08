@@ -1,10 +1,12 @@
 package transaction
 
-import "Consure-App/domain"
+import (
+	"Consure-App/dto"
+)
 
 type TransactionUsecase interface {
 	Create(*InputTransaction, int) error
-	History(int, string, *[]*domain.Transaction) error
+	History(int, string, *[]*dto.History) error
 }
 
 type InputTransaction struct {

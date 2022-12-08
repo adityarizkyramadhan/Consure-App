@@ -1,7 +1,7 @@
 package transaction
 
 import (
-	"Consure-App/domain"
+	"Consure-App/dto"
 	"Consure-App/middleware"
 	"Consure-App/sdk/auth"
 	"Consure-App/sdk/response"
@@ -40,7 +40,7 @@ func (ctrl *TransactionController) Create(ctx *gin.Context) {
 func (ctrl *TransactionController) History(ctx *gin.Context) {
 	status := ctx.Query("status")
 	id := auth.GetIDFromBearer(ctx)
-	data := []*domain.Transaction{}
+	data := []*dto.History{}
 	if err := ctrl.TrxUc.History(id, status, &data); err != nil {
 		ctx.JSON(http.StatusInternalServerError, response.ResponseWhenFail(http.StatusInternalServerError, err.Error()))
 		return

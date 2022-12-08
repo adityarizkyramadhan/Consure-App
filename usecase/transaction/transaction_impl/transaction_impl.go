@@ -2,6 +2,7 @@ package transactionimpl
 
 import (
 	"Consure-App/domain"
+	"Consure-App/dto"
 	"Consure-App/repository/general"
 	transRep "Consure-App/repository/transaction"
 	transUc "Consure-App/usecase/transaction"
@@ -37,6 +38,26 @@ func (uc *TransactionUsecase) Create(input *transUc.InputTransaction, idUser int
 	return uc.GeneralRepo.Create(data)
 }
 
-func (uc *TransactionUsecase) History(id int, status string, data *[]*domain.Transaction) error {
-	return uc.TransRepo.History(id, status, data)
+func (uc *TransactionUsecase) History(id int, status string, data *[]*dto.History) error {
+	reservasi := []*domain.Transaction{}
+	if err := uc.TransRepo.History(id, status, &reservasi); err != nil {
+		return err
+	}
+
+	if len(reservasi) == 0 {
+		return nil
+	}
+
+	for i := range reservasi {
+		expert := new(domain.Expert)
+		if err := uc.GeneralRepo.FindById(reservasi[i].IdExpert, expert); err != nil {
+			return err
+		}
+		his := &dto.History{
+			Expert:       expert,
+			Transactions: reservasi[i],
+		}
+		*data = append(*data, his)
+	}
+	return nil
 }
