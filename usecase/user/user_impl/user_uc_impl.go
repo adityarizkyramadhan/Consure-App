@@ -78,3 +78,7 @@ func (uc *UserUsecaseImpl) UpdateProfile(id int, avatar *multipart.FileHeader) (
 	}
 	return link, nil
 }
+
+func (uc *UserUsecaseImpl) GetProfile(id int, data *domain.User) error {
+	return uc.RepoGeneral.FindById(id, data)
+}

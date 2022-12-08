@@ -1,6 +1,7 @@
 package user
 
 import (
+	"Consure-App/domain"
 	"Consure-App/middleware"
 	"Consure-App/sdk/auth"
 	"Consure-App/sdk/response"
@@ -22,6 +23,7 @@ func NewUserController(userUc userUc.UserUsecase, r *gin.RouterGroup) {
 	r.POST("signin", userCtrl.SignIn)
 	r.POST("signup", userCtrl.SignUp)
 	r.PUT("profile", middleware.ValidateJWToken(), userCtrl.UpdateFotoProfile)
+	r.GET("profile", middleware.ValidateJWToken(), userCtrl.GetProfile)
 }
 
 type signInInput struct {
@@ -83,4 +85,14 @@ func (ctrl *UserController) UpdateFotoProfile(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, response.ResponseWhenSuccess(http.StatusOK, "success", gin.H{
 		"link": link,
 	}))
+}
+
+func (ctrl *UserController) GetProfile(ctx *gin.Context) {
+	id := auth.GetIDFromBearer(ctx)
+	data := new(domain.User)
+	if err := ctrl.UserUc.GetProfile(id, data); err != nil {
+		ctx.JSON(http.StatusInternalServerError, response.ResponseWhenFail(http.StatusInternalServerError, err.Error()))
+		return
+	}
+	ctx.JSON(http.StatusOK, response.ResponseWhenSuccess(http.StatusOK, "success", data))
 }
