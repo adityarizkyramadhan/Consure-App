@@ -13,6 +13,8 @@ import (
 	expertUc "Consure-App/usecase/expert/expert_impl"
 	userUc "Consure-App/usecase/user/user_impl"
 
+	_ "Consure-App/docs"
+
 	transactionRepo "Consure-App/repository/transaction/transaction_impl"
 	transactionUc "Consure-App/usecase/transaction/transaction_impl"
 
@@ -21,12 +23,31 @@ import (
 	"fmt"
 	"os"
 
+	swaggerfiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
+
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
+// @title           Swagger Example API
+// @version         1.0
+// @description     This is a sample server celler server.
+// @termsOfService  http://swagger.io/terms/
+
+// @contact.name   API Support
+// @contact.url    http://www.swagger.io/support
+// @contact.email  support@swagger.io
+
+// @license.name  Apache 2.0
+// @license.url   http://www.apache.org/licenses/LICENSE-2.0.html
+
+// @host      localhost:10005
+// @BasePath  /
+
+// @securityDefinitions.basic  BasicAuth
 func main() {
 	if err := godotenv.Load(); err != nil {
 		panic(err.Error())
@@ -44,6 +65,8 @@ func main() {
 	router.GET("/ping", func(ctx *gin.Context) {
 		ctx.JSON(200, "pong cd ke tiga")
 	})
+
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
 	repoGeneral := generalRepo.NewGeneralRepositoryImpl(db)
 

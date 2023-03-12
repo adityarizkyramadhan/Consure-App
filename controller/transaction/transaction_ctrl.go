@@ -37,6 +37,18 @@ func (ctrl *TransactionController) Create(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, response.ResponseWhenSuccess(http.StatusCreated, "Success", nil))
 }
 
+// ShowAccount godoc
+// @Summary      Show history
+// @Description  get string by ID
+// @Tags         Transaction
+// @Accept       json
+// @Produce      json
+// @Success      200  {array}  domain.Transaction
+// @Failure      400  {object}  response.Response
+// @Failure      404  {object}  response.Response
+// @Failure      500  {object}  response.Response
+// @Security 	 BearerAuth
+// @Router       /history [get]
 func (ctrl *TransactionController) History(ctx *gin.Context) {
 	status := ctx.Query("status")
 	id := auth.GetIDFromBearer(ctx)

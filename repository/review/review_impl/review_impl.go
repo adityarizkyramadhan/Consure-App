@@ -17,6 +17,7 @@ func NewReviewRepository(db *gorm.DB) review.ReviewRepository {
 	}
 }
 func (repImpl *ReviewRepositoryImpl) FindByIdExpert(id int, data *[]*domain.Review) error {
+
 	return repImpl.DB.Where("id_expert = ?", id).Find(data).Error
 }
 

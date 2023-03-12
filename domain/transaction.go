@@ -2,8 +2,6 @@ package domain
 
 import (
 	"time"
-
-	"gorm.io/gorm"
 )
 
 // id pembayaran
@@ -15,7 +13,11 @@ import (
 // metode pembayaran : bank/ewallet
 
 type Transaction struct {
-	gorm.Model
+	// gorm.Model
+	// DeletedAt          DeletedAt `gorm:"index"`
+	ID                 uint `gorm:"primarykey"`
+	CreatedAt          time.Time
+	UpdatedAt          time.Time
 	Paket              string    `json:"paket"`
 	Jadwal             string    `json:"jadwal"`
 	DeadlinePembayaran time.Time `json:"deadline_pembayaran"`
